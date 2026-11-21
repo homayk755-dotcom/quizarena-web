@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#100b1d">
+  <title>QuizArena</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js?65"></script>
+  <script src="./config.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar wrap">
+    <button class="brand" id="brandHome" aria-label="На главную">QUIZ<span>ARENA</span><small>KNOWLEDGE BATTLE</small></button>
+    <div class="top-actions">
+      <button class="sound-button" id="soundButton" aria-label="Включить или выключить музыку" title="Музыка">♫</button>
+      <button class="sound-button settings-button" id="settingsButton" aria-label="Настройки звука" title="Настройки">⚙</button>
+    </div>
+    <button class="profile-chip" id="profileShortcut"><span class="avatar" id="avatar">Q</span><span class="profile-short"><b id="headerName">Игрок</b><small id="headerRating">100 RP</small></span></button>
+  </header>
+
+  <main class="wrap main" id="main">
+    <section class="view active" id="view-home">
+      <div class="hero card-glow">
+        <div class="hero-copy"><span class="eyebrow"><i></i> ТВОЯ АРЕНА ЗНАНИЙ</span><h1>Готов проверить<br>свои знания?</h1><p>Соревнуйся с игроками, отвечай быстрее соперников и поднимайся в рейтинге.</p><button class="btn btn-primary" id="quickPlay">⚔ Играть сейчас <span>→</span></button></div>
+        <div class="hero-orb"><div class="orb-core">Q</div><span class="orb-ring ring-one"></span><span class="orb-ring ring-two"></span><span class="orb-star star-one">✦</span><span class="orb-star star-two">✧</span></div>
+        <div class="hero-foot"><span>СЕЗОН 01</span><span class="live-dot"></span><span>АРЕНА ОТКРЫТА</span></div>
+      </div>
+
+      <section class="daily-card card-glow" aria-label="Ежедневное задание">
+        <div class="daily-top"><span class="eyebrow">МИССИЯ ДНЯ</span><span class="daily-pill" id="dailyQuestStatus">В ПРОЦЕССЕ</span></div>
+        <div class="daily-body"><div><h3>Разомни мозг</h3><p>Заверши одну тренировку сегодня и закрой ежедневную цель.</p></div><div class="daily-icon">⚡</div></div>
+        <div class="daily-progress-row"><span id="dailyQuestText">0 / 1 тренировка</span><span id="dailyQuestPercent">0%</span></div>
+        <div class="daily-progress"><span id="dailyQuestBar"></span></div>
+        <small>*Отметка цели хранится локально в этом браузере; серверную награду подключим отдельно.</small>
+        <button class="daily-start" id="dailyStart">Начать тренировку →</button>
+      </section>
+
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">🏆</span><b id="statWins">0</b><small>ПОБЕДЫ</small></div>
+        <div class="stat-card"><span class="stat-icon">⚡</span><b id="statXp">0</b><small>ОПЫТ XP</small></div>
+        <div class="stat-card"><span class="stat-icon">♛</span><b id="statRating">100</b><small>РЕЙТИНГ</small></div>
+      </div>
+
+      <div class="section-heading"><div><span class="eyebrow">ВЫБИРАЙ СТИЛЬ ИГРЫ</span><h2>Игровые режимы</h2></div><span class="heading-mark">01 / 03</span></div>
+      <div class="mode-grid">
+        <button class="mode-card mode-featured" data-action="duel"><span class="mode-symbol">⚔️</span><span class="mode-tag">ОНЛАЙН</span><b>Дуэль 1 на 1</b><small>Сразись с реальным соперником</small><span class="mode-arrow">↗</span></button>
+        <button class="mode-card" data-action="friends"><span class="mode-symbol">👥</span><b>С друзьями</b><small>Приватные комнаты</small><span class="mode-arrow">↗</span></button>
+        <button class="mode-card" data-action="practice"><span class="mode-symbol">🎯</span><b>Тренировка</b><small>Оттачивай знания</small><span class="mode-arrow">↗</span></button>
+        <button class="mode-card" data-action="tournaments"><span class="mode-symbol">🏅</span><b>Турниры</b><small>Стань чемпионом</small><span class="mode-arrow">↗</span></button>
+      </div>
+
+      <div class="section-heading category-heading"><div><span class="eyebrow">НАЙДИ СВОЮ ТЕМУ</span><h2>Категории</h2></div><span class="heading-mark">02 / 03</span></div>
+      <div class="category-grid" id="categoryGrid"></div>
+      <button class="btn btn-outline full" id="categoryPractice">Начать тренировку <span>→</span></button>
+    </section>
+
+    <section class="view" id="view-practice">
+      <button class="back-link" data-go="home">← Главная</button>
+      <div class="section-heading"><div><span class="eyebrow">SOLO MODE</span><h2>Тренировка</h2></div><span class="pill">БЕЗ СОПЕРНИКА</span></div>
+      <div class="game-panel" id="practicePanel"><div class="loading-ring"></div><p>Подготавливаем вопросы…</p></div>
+    </section>
+
+    <section class="view" id="view-duel">
+      <button class="back-link" data-go="home">← Главная</button>
+      <div class="section-heading"><div><span class="eyebrow">LIVE MATCHMAKING</span><h2>Дуэль 1 на 1</h2></div><span class="pill pill-live">● LIVE</span></div>
+      <div class="game-panel" id="duelPanel"><div class="duel-vs">⚔️</div><h3>Готов к битве?</h3><p>Система найдёт соперника с близким рейтингом.</p><button class="btn btn-primary full" id="findOpponent">Найти соперника</button><p class="micro-note">10 вопросов · 15 секунд на ответ · очки за точность и скорость</p></div>
+    </section>
+
+    <section class="view" id="view-leaderboard">
+      <div class="section-heading"><div><span class="eyebrow">SEASON 01</span><h2>Таблица лидеров</h2></div><span class="pill">TOP 50</span></div>
+      <div class="leaderboard card" id="leaderboard"><div class="loading-ring"></div><p>Загружаем рейтинг…</p></div>
+    </section>
+
+    <section class="view" id="view-profile">
+      <div class="section-heading"><div><span class="eyebrow">PLAYER CARD</span><h2>Мой профиль</h2></div><span class="pill">SEASON 01</span></div>
+      <div class="profile-hero card"><div class="profile-avatar" id="profileAvatar">Q</div><div><h3 id="profileName">Игрок</h3><span class="rank-label">НОВИЧОК</span></div><div class="profile-rating"><b id="profileRating">100</b><small>RATING</small></div></div>
+      <div class="profile-metrics"><div class="card"><b id="profileWins">0</b><small>ПОБЕДЫ</small></div><div class="card"><b id="profileGames">0</b><small>ИГРЫ</small></div><div class="card"><b id="profileXp">0</b><small>ОПЫТ XP</small></div></div>
+      <div class="card progress-card"><div class="progress-head"><b>Следующий уровень</b><span id="levelProgressText">0 / 500 XP</span></div><div class="progress-track"><span id="levelProgress"></span></div><small>Продолжай играть, чтобы получать опыт и повышать ранг.</small></div>
+      <div class="section-heading"><div><span class="eyebrow">ТВОИ ДОСТИЖЕНИЯ</span><h2>Коллекция наград</h2></div><span class="heading-mark" id="achievementCount">0 / 5</span></div>
+      <div class="achievement-grid" id="achievementGrid"></div>
+    </section>
+
+    <section class="view" id="view-friends"><button class="back-link" data-go="home">← Главная</button><div class="placeholder card"><div class="placeholder-icon">👥</div><span class="eyebrow">PRIVATE ROOMS</span><h2>Играй с друзьями</h2><p>Приватные комнаты с кодом приглашения — следующий этап разработки. Сначала завершим и проверим дуэли 1 на 1.</p></div></section>
+    <section class="view" id="view-tournaments"><button class="back-link" data-go="home">← Главная</button><div class="placeholder card"><div class="placeholder-icon">🏅</div><span class="eyebrow">ARENA EVENTS</span><h2>Турниры</h2><p>Сезонные турниры, сетки и награды появятся после запуска основной системы матчей.</p></div></section>
+    <section class="view" id="view-result"><div class="placeholder card" id="resultPanel"></div></section>
+  </main>
+
+  <nav class="bottom-nav wrap">
+    <button class="nav-item active" data-nav="home"><span>⌂</span>Главная</button>
+    <button class="nav-item" data-nav="duel"><span>⚔</span>Игры</button>
+    <button class="nav-item" data-nav="leaderboard"><span>♛</span>Рейтинг</button>
+    <button class="nav-item" data-nav="profile"><span>◉</span>Профиль</button>
+  </nav>
+  <audio id="backgroundMusic" preload="none" loop playsinline>
+    <source src="./quizarena-ambient.mp3" type="audio/mpeg">
+  </audio>
+  <div class="sound-modal" id="soundModal" aria-hidden="true">
+    <div class="sound-dialog" role="dialog" aria-modal="true" aria-labelledby="soundTitle">
+      <div class="sound-dialog-head"><div><span class="eyebrow">PERSONAL SETTINGS</span><h2 id="soundTitle">Звук и атмосфера</h2></div><button class="modal-close" id="closeSoundModal" aria-label="Закрыть">×</button></div>
+      <label class="setting-row"><span><b>Фоновая музыка</b><small>Мягкий оригинальный synth-ambient</small></span><input type="checkbox" id="musicCheck"></label>
+      <label class="setting-row"><span><b>Игровые эффекты</b><small>Ответы, комбо и победа</small></span><input type="checkbox" id="sfxCheck" checked></label>
+      <label class="volume-row" for="musicVolume"><span>Громкость музыки</span><b id="volumeValue">30%</b></label>
+      <input type="range" min="0" max="100" value="30" id="musicVolume" class="volume-slider">
+      <p class="sound-note">Музыка начнёт играть после твоего нажатия — браузеры и Telegram не разрешают автоматический запуск звука.</p>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
