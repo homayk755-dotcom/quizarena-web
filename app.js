@@ -126,11 +126,12 @@
     showView('duel');
     const panel = $('duelPanel');
     panel.innerHTML = '<div class="loading-ring"></div><h3>Подключаемся к арене…</h3><p>Ищем свободного соперника.</p><button class="btn btn-outline full" id="cancelDuel">Отменить поиск</button>';
-    const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const backendOrigin = API_BASE ? new URL(API_BASE) : new URL(location.origin);
+    const scheme = backendOrigin.protocol === 'https:' ? 'wss:' : 'ws:';
     const params = new URLSearchParams();
     if (initData) params.set('init_data', initData); else params.set('dev_id', devId);
     duelCompleted = false;
-    const socket = new WebSocket(`${scheme}//${backendLocation.host}/ws/duel?${params.toString()}`);
+    const socket = new WebSocket(`${scheme}//${backendOrigin.host}/ws/duel?${params.toString()}`);
     duelSocket = socket;
     $('cancelDuel').onclick = () => { duelSocket?.close(); duelSocket=null; panel.innerHTML = '<div class="duel-vs">⚔️</div><h3>Поиск отменён</h3><button class="btn btn-primary full" id="findOpponent">Найти соперника</button>'; $('findOpponent').onclick=startDuel; };
     socket.onmessage = event => { let data; try { data=JSON.parse(event.data); } catch (_) { return; } handleDuelEvent(data); };
