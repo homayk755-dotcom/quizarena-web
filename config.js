@@ -1,2 +1,3 @@
-// Same-origin when FastAPI serves the app locally.
-window.QUIZARENA_CONFIG = { apiBase: "" };
+window.QUIZARENA_CONFIG = {
+  apiBase: "https://warming-packets-duncan-exclusion.trycloudflare.com"
+};
